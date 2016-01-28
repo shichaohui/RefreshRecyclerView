@@ -109,5 +109,8 @@ public void setItemTypes(List<Integer> viewTypes) {
 
 具体的使用方法可以参考[MainActivity.java](https://github.com/shichaohui/RefreshRecyclerView/blob/master/MainActivity.java)
 
+除了这些方法外就是RecyclerView的方法了，如`setLayoutManager(LayoutManager layout)`等。
+
 如果以上方法不够用，比如要设置动画，我这里提供的类中并没有公开这个方法，要公开也很简单，参考setAdapter()方法的形式就可以了。
+
 这里还有一个问题：就是`onBindHolder(VH holder, int position)`方法的position是减去了Header的数量的（不然无法跟数据集合中的position对应），所以在使用RecyclerView的需要以position为参数的方法时，需要把Header的数量加上（这里只能有1个Header，所以＋1就行了）。
