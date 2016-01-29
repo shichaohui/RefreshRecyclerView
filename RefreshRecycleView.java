@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.paoword.oa.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class RefreshRecycleView extends SwipeRefreshLayout {
      *
      * @param manager 布局管理器
      */
-    public void setLayoutManager(final LayoutManager manager) {
+    public void setLayoutManager(LayoutManager manager) {
         if (manager instanceof GridLayoutManager) {
             ((GridLayoutManager) manager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
@@ -225,6 +227,16 @@ public class RefreshRecycleView extends SwipeRefreshLayout {
 
         public LoadMoreRecyclerView(Context context) {
             super(context);
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    if (getBottom() >= getChildAt(findLastVisibleItemPosition()).getBottom()) {
+                        // 最后一条正在显示的子视图在RecyclerView的上面, 说明子视图未充满RecyclerView
+                        setLoadMoreEnable(false); // 未充满则不能加载更多
+                        getAdapter().notifyDataSetChanged();
+                    }
+                }
+            });
         }
 
         @Override
@@ -354,7 +366,7 @@ public class RefreshRecycleView extends SwipeRefreshLayout {
          * @param position 位置
          * @return 是否为脚部布局
          */
-        private boolean isFooter(int position) {
+        public boolean isFooter(int position) {
             return TYPE_FOOTER == getItemViewType(position);
         }
 
@@ -362,7 +374,7 @@ public class RefreshRecycleView extends SwipeRefreshLayout {
          * @param position 位置
          * @return 是否为头部布局
          */
-        private boolean isHeader(int position) {
+        public boolean isHeader(int position) {
             return TYPE_HEADER == getItemViewType(position);
         }
 
